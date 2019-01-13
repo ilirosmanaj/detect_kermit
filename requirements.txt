@@ -6,4 +6,4 @@ opencv-python
 scipy
 matplotlib
 h5py
-tensorflow
+tensorflow-gpu
