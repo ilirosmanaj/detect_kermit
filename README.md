@@ -34,6 +34,7 @@ The guy from the article also shared the source code (which is for Raccoon detec
 and that can be found [here](https://github.com/datitran/raccoon_dataset). The answer
 from stackoverflow and this guy have used basically the same structure/steps.
 
+# NOTE: Whatever is written below may become obselete with the use of imageai library
 
 ## General steps:
 

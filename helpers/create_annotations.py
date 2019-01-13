@@ -1,1 +1,0 @@
-# use LabelImg here https://github.com/tzutalin/labelImg, and store stuff under annotations folder
