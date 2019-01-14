@@ -27,10 +27,7 @@ def main():
     prediction.loadModel(num_objects=2)
 
     # TODO: later add support for multiple images/video prediction
-    # predict_image(image_name='kermit_4.jpg', prediction=prediction, execution_path=execution_path)
-    # predict_image(image_name='kermit_5.jpg', prediction=prediction, execution_path=execution_path)
-    for i in range(1,4):
-        predict_image(image_name = '{}.jpg'.format(i),prediction = prediction, execution_path = execution_path)
+    predict_image(image_name='kermit.jpg', prediction=prediction, execution_path=execution_path)
 
 
 if __name__ == '__main__':
