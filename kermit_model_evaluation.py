@@ -22,12 +22,12 @@ def main():
     prediction.setModelTypeAsResNet()
 
     # pass the correct model name (model name is changed in each run)
-    prediction.setModelPath(os.path.join(execution_path, 'data/images/models/model_ex-015_acc-0.602679.h5'))
+    prediction.setModelPath(os.path.join(execution_path, 'data/images/models/model_ex-100_acc-0.875000.h5'))
     prediction.setJsonPath(os.path.join(execution_path, 'data/images/json/model_class.json'))
     prediction.loadModel(num_objects=2)
 
     # TODO: later add support for multiple images/video prediction
-    predict_image(image_name='kermit.jpg', prediction=prediction, execution_path=execution_path)
+    predict_image(image_name='images.jpeg', prediction=prediction, execution_path=execution_path)
 
 
 if __name__ == '__main__':
