@@ -1,46 +1,35 @@
-import cv2
 import glob
+from typing import Optional
 
-import numpy as np
+from utils import print_progress
+from PIL import Image
 
 PATH_TO_IMAGES = '../data/images/train/kermit/kermit-train-images'
 
 
-def rotate_image(image_path: str, direction: str):
-    img = cv2.imread(image_path)
+def rotate_image(image_path: str, direction: Optional[str]):
+    image = Image.open(image_path)
 
-    h, w, c = img.shape
-    h = h - 1
-    w = w - 1
-
-    empty_img = np.zeros([h, w, 3], dtype=np.uint8)
-
-    for i in range(h):
-        for j in range(w):
-            if direction == 'left':
-                empty_img[i, j] = img[j, i]
-                empty_img = empty_img[0:h, 0:w]
-
-            elif direction == 'right':
-                empty_img[i, j] = img[h - j, w - i]
-                empty_img = empty_img[0:h, 0:w]
-
-            else:
-                # otherwise rotate 180 degrees
-                empty_img[i, j] = img[h - i, w - j]
-                empty_img = empty_img[0:h, 0:w]
+    if direction == 'right':
+        rotated = image.rotate(90)
+    elif direction == 'left':
+        rotated = image.rotate(-90)
+    else:
+        rotated = image.rotate(180)
 
     image_name = image_path.split('/')[-1].replace('.jpg', '')
-
-    cv2.imwrite('{}/{}{}.jpg'.format(PATH_TO_IMAGES, image_name, direction), empty_img)
+    rotated.save('{}/{}{}.jpg'.format(PATH_TO_IMAGES, image_name, direction))
 
 
 def main():
     # get all image names
-    images = glob.glob('/*.jpg'.format(PATH_TO_IMAGES))
+    images = glob.glob('{}/*.jpg'.format(PATH_TO_IMAGES))
 
-    for image in images:
+    for i, image in enumerate(images):
         rotate_image(image, 'right')
+        print_progress((i + 1) / len(images))
+
+    print('\nRotated {} images'.format(len(images)))
 
 
 if __name__ == '__main__':
