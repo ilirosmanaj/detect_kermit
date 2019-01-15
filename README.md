@@ -23,6 +23,18 @@ using the following command:
 python3 -m pip install --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.12.0-py3-none-any.whl
 ```
 
+Since models are growing quite big, we are using Git LFS (Large File Storage). In order to install
+it do:
+
+osX:
+```
+brew install git-lfs
+```
+
+ubuntu:
+```
+sudo apt-get install git-lfs
+```
 
 ## General steps:
 
