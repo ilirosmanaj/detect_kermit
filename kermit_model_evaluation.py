@@ -1,14 +1,15 @@
+import argparse
 import asyncio
 from copy import deepcopy
-from functools import wraps
 from typing import Union
 
-import click
 import os
 import cv2
 
 import numpy as np
 from imageai.Prediction.Custom import CustomImagePrediction
+
+from helpers.utils import print_progress, gather_dict
 
 EXECUTION_PATH = os.getcwd()
 
@@ -26,52 +27,83 @@ async def predict_image(image_name: Union[str, np.ndarray], model: CustomImagePr
     for eachPrediction, eachProbability in zip(predictions, probabilities):
         representation += '     {} : {}'.format(eachPrediction, eachProbability)
 
-    print(representation)
-    print('')
-
     return representation
 
 
 async def predict_video(video_path: str, model: CustomImagePrediction):
     cap = cv2.VideoCapture(video_path)
+    VIDEO_PLAYING_SPEED = 2
+    VIDEO_DURATION_IN_SECONDS = int(int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) / cap.get(cv2.CAP_PROP_FPS)) + 1
+
+    print('Predicting video frames...')
+
+    counter = 0
+    tasks = {}
+    # read all frames and run predictions on them
 
     while cap.isOpened():
+        # set position to only read full seconds
+        cap.set(cv2.CAP_PROP_POS_MSEC, (counter * 1000))
         ret, frame = cap.read()
 
-        asyncio.create_task(predict_image(deepcopy(frame), model, input_type='array'))
-        # res = predict_image(deepcopy(frame), model, input_type='array')
-        title = 'test'
-        cv2.imshow(title, frame)
+        tasks[counter] = asyncio.ensure_future(predict_image(deepcopy(frame), model, input_type='array'))
+        counter += 1
+        print_progress(counter / VIDEO_DURATION_IN_SECONDS)
 
-        if cv2.waitKey(6) == ord('q'):
+        if counter >= VIDEO_DURATION_IN_SECONDS:
+            break
+
+    print('\nGetting predictions foreach frame from the model')
+    results = await gather_dict(tasks)
+
+    print('\nStarting video output....')
+
+    # show video with the given results
+    cap = cv2.VideoCapture(video_path)
+    counter = 0
+    while cap.isOpened():
+        cap.set(cv2.CAP_PROP_POS_MSEC, counter)
+        ret, frame = cap.read()
+        cv2.imshow('Test', frame)
+
+        index = int(counter/1000)
+        res = results.get(index)
+
+        if res:
+            print(results[index])
+            results.pop(index)
+
+        counter += 1
+
+        if cv2.waitKey(VIDEO_PLAYING_SPEED) == ord('q'):
             break
 
     cap.release()
     cv2.destroyAllWindows()
 
 
-@click.command()
-@click.option('--file_type', '-t', type=click.Choice(['image', 'video']), default='video', help='Inputs file type')
-@click.option('--files', '-f', type=click.STRING, required=True, default='Muppets.avi',
-              help='File path. Comma separated images accepted if type image')
 async def main(file_type: str, files: str):
     model = CustomImagePrediction()
     model.setModelTypeAsResNet()
 
-    # pass the correct model name (model name is changed in each run)
     model.setModelPath(os.path.join(EXECUTION_PATH, 'data/images/models/model_ex-100_acc-0.875000.h5'))
     model.setJsonPath(os.path.join(EXECUTION_PATH, 'data/images/json/model_class.json'))
-    model.loadModel(num_objects=2)
+    model.loadModel(num_objects=2)  # number of objects on your trained model
 
     if file_type == 'image':
         for image in files.split(','):
-            pass
-            # predict_image(image_name=image, model=model, input_type='file')
+            await predict_image(image_name=image, model=model, input_type='file')
     else:
         await predict_video(video_path=files, model=model)
 
 
 if __name__ == '__main__':
+    arguments = argparse.ArgumentParser()
+    arguments.add_argument('--file_type', '-t', help='Inputs file type', type=str, default='video')
+    arguments.add_argument('--files', '-f', help='File path. Comma separated images accepted if type image',
+                           type=str, default='Muppets.avi')
+    args = arguments.parse_args()
+
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    loop.run_until_complete(main(args.file_type, args.files))
     loop.close()
