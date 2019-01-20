@@ -106,4 +106,7 @@ venv.bak/
 # pycharm
 .idea/
 
+# ignore temp data
+tmp/
+
 *.avi
