@@ -1,5 +1,5 @@
 # Kermit Detection Repo
-![Kermit wanted](https://github.com/ilirosmanaj/detect_kermit/blob/master/kermit_wanted.jpg)
+![Kermit wanted](https://github.com/ilirosmanaj/detect_kermit/blob/master/readme_images/kermit_wanted.jpg)
 
 This repository contains the code for detecting Kermit (the frog) from
 the puppets tv show. It uses [ImageAI](https://github.com/OlafenwaMoses/ImageAI) python library
@@ -141,7 +141,11 @@ as jpegs with a text on top of the image that shows the prediction result for ea
 ## Example run:
 
 Since episode3 was used as validation set, the results and corresponding predictions for it 
-are stored under `episode3_results` directory. Check it out...
+are stored under `episode3_results` directory. Check it out or see a part of classification
+
+![Episode3 Results](https://github.com/ilirosmanaj/detect_kermit/blob/master/readme_images/episode3.gif)
+
+
 
 ## Troubleshooting:
 
