@@ -27,6 +27,8 @@ def main():
 
     for i, image in enumerate(images):
         rotate_image(image, 'right')
+        rotate_image(image, 'left')
+        rotate_image(image)
         print_progress((i + 1) / len(images))
 
     print('\nRotated {} images'.format(len(images)))
