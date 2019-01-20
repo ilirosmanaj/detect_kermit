@@ -13,15 +13,15 @@ from helpers.utils import print_progress, gather_dict
 EXECUTION_PATH = os.getcwd()
 
 
-async def predict_image(image_name: Union[str, np.ndarray], model: CustomImagePrediction) -> str:
+async def predict_image(image_name: Union[str, np.ndarray], model: CustomImagePrediction) -> dict:
     """Predicts a given image with the supplied prediction model"""
     print('\nPredicting the {} image'.format(image_name))
 
     predictions, probabilities = model.predictImage(os.path.join(EXECUTION_PATH, image_name), result_count=2)
 
-    representation = ''
+    representation = {}
     for eachPrediction, eachProbability in zip(predictions, probabilities):
-        representation += ' {0}: {1:.2f}'.format(eachPrediction, float(eachProbability))
+       representation[eachPrediction]= '{0:.2f}%'.format(float(eachProbability))
 
     return representation
 
@@ -29,8 +29,8 @@ async def predict_image(image_name: Union[str, np.ndarray], model: CustomImagePr
 async def predict_video(video_path: str, model: CustomImagePrediction):
     cap = cv2.VideoCapture(video_path)
     VIDEO_DURATION_IN_SECONDS = int(int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) / cap.get(cv2.CAP_PROP_FPS)) + 1
-    # remove tmp images
-    # os.system('rm -rf tmp')
+    # remove episode3_results images
+    # os.system('rm -rf episode3_results')
 
     print('Gathering frames from the video...')
 
@@ -46,7 +46,7 @@ async def predict_video(video_path: str, model: CustomImagePrediction):
             break
 
         # store the image and use that one for predicting
-        image_name = 'tmp/test_frame{}.jpg'.format(counter)
+        image_name = 'episode3_results/ep3_frame{}.jpg'.format(counter)
         cv2.imwrite(image_name, frame)
 
         tasks[image_name] = asyncio.ensure_future(predict_image(image_name, model))
@@ -65,7 +65,12 @@ async def predict_video(video_path: str, model: CustomImagePrediction):
     for image_path in results.keys():
         print('\nWriting prediction for {}'.format(image_path))
         img = cv2.imread(image_path)
-        cv2.putText(img, results[image_path], (130, 25), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 0, 255), 1, cv2.LINE_AA)
+
+        results_string = ''
+        for res in sorted(results[image_path].keys()):
+            results_string += ' ' + res + ' ' + results[image_path][res]
+
+        cv2.putText(img, results_string, (130, 25), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 0, 255), 1, cv2.LINE_AA)
         cv2.imwrite(image_path, img)
 
     print('\nDone....')

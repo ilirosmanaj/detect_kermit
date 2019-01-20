@@ -1,4 +1,5 @@
 # Kermit Detection Repo
+![Kermit wanted](https://github.com/ilirosmanaj/detect_kermit/blob/master/kermit_wanted.jpg)
 
 This repository contains the code for detecting Kermit (the frog) from
 the puppets tv show. It uses [ImageAI](https://github.com/OlafenwaMoses/ImageAI) python library
@@ -137,6 +138,10 @@ python kermit_model_evaluation.py -t video -f MuppetsEpisode3.avi
 This will get all the frames in 1 second interval from the video, store them under `tmp` folder
 as jpegs with a text on top of the image that shows the prediction result for each frame. 
 
+## Example run:
+
+Since episode3 was used as validation set, the results and corresponding predictions for it 
+are stored under `episode3_results` directory. Check it out...
 
 ## Troubleshooting:
 
