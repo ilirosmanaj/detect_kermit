@@ -93,6 +93,9 @@ To train the model, run the following:
 python imageai_build_model.py
 ```
 
+This may take different running times, depending on the number of training images, epochs, batch sizes etc.
+
+
 **Note:** Please make sure that the folder structure for images is as following:
 
 * data
@@ -148,6 +151,8 @@ are stored under `episode3_results` directory. Check it out or see a part of cla
 ![Episode3 Results](https://github.com/ilirosmanaj/detect_kermit/blob/master/readme_images/episode3.gif)
 
 
+As the gif shows, sometimes the model mixes Kermit like characters (green frogs) as Kermit, but not for 
+the cases where there is no clear similarity.
 
 ## Troubleshooting:
 
