@@ -2,7 +2,7 @@
 ![Kermit wanted](https://github.com/ilirosmanaj/detect_kermit/blob/master/readme_images/kermit_wanted.jpg)
 
 This repository contains the code for detecting Kermit (the frog) from
-the puppets tv show. It uses [ImageAI](https://github.com/OlafenwaMoses/ImageAI) python library
+`The Muppets` TV show. It uses [ImageAI](https://github.com/OlafenwaMoses/ImageAI) python library
 (which is build on top of tensorflow object detection API).
 
 
@@ -33,18 +33,18 @@ sudo apt-get install git-lfs
 
 ## General steps:
 
-* Get images from `The muppets show` videos
+* Get images from `The Muppets show` videos
 * Use frames from episode 1 and 2 as training set
     * Those frames are divided in two classes: `kermit` and `no-kermit`
 * Use frames from episode 3 as validation set
-* Enrich kermit images by:
+* Enrich Kermit images by:
     * rotating images (left, right and 180 degrees)
-    * downloading some kermit images from google
-* Enrich non kermit images by adding non kermit images (e.g. green frogs, human, nature etc)
+    * downloading some more Kermit images from google
+* Enrich non kermit images by adding non kermit images (e.g. green frogs, humans, nature etc)
 
 ## Running
 
-### Get images from vidoes
+### Get images from videos
 
 In order to get the frames as images from video, run the following:
 
@@ -53,7 +53,8 @@ cd helpers
 python convert_vid2image.py
 ```
 
-**Note:** Due to large file sizes the video files are not checked in in the repository
+**Note:** Due to large file sizes the video files are not checked in in the repository, rather 
+only the corresponding script
 
 ### Rotate Images
 
@@ -104,7 +105,7 @@ python imageai_build_model.py
             * no-kermit
             
  After model is trained, the corresponding trained model is stored in `h5` format under 
- the `data/images/models/some_name.h5`
+ the `data/images/models/model_name.h5`
 
 ### Run predictions on the model
 
@@ -114,8 +115,8 @@ After having the model trained, you can run predictions on it using two differen
 To run predictions on an image, run the following:
 
 ```bash
-python kermit_model_evaluation.py -t (one of image or video) -f (file path to image - comma 
-separated string supported as well, or path to video)
+python kermit_model_evaluation.py -t [one of image or video] -f [file path to image - comma 
+separated string supported as well, or path to video]
 ```
 
 E.g. Predicting an image:
@@ -135,8 +136,9 @@ Same can be done for a video:
 python kermit_model_evaluation.py -t video -f MuppetsEpisode3.avi
 ```
 
-This will get all the frames in 1 second interval from the video, store them under `tmp` folder
-as jpegs with a text on top of the image that shows the prediction result for each frame. 
+This will get all the frames in 1 second interval from the video, store them under `tmp` (for now 
+named as episode3_results) folder as jpegs with a banner on top of the image that shows the prediction result 
+for each frame. 
 
 ## Example run:
 
@@ -156,7 +158,8 @@ using the following command:
 python3 -m pip install --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.12.0-py3-none-any.whl
 ```
 
-Sometimes tensorflow gpu might complain about running devices. To fix it, just set the `CUDA_VISIBLE_DEVICES` as follows:
+Sometimes tensorflow gpu might complain about limited number of running devices. 
+To fix it, just set the `CUDA_VISIBLE_DEVICES` environment variable as follows:
 
 ```
 export CUDA_VISIBLE_DEVICES=''
